@@ -1,0 +1,647 @@
+\documentclass[12pt,letter]{article}
+
+%% \ifCLASSOPTIONcompsoc
+%% % IEEE Computer Society needs nocompress option
+%% % requires cite.sty v4.0 or later (November 2003)
+%% \usepackage[nocompress]{cite}
+%% \else
+%% % normal IEEE
+%% \usepackage{cite}
+%% \fi
+
+%% \usepackage[fleqn]{amsmath}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amsfonts,amsthm,bm}
+\usepackage{breqn}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{tikz}
+\usepackage{algorithm2e}
+\usepackage{siunitx}
+\usepackage{graphicx}
+\usepackage{subcaption}
+%% \usepackage{datetime}
+\usepackage{multirow}
+\usepackage{multicol}
+\usepackage{mathrsfs}
+\usepackage{fancyhdr}
+\usepackage{fancyvrb}
+\usepackage{parskip} %turns off paragraph indent
+\pagestyle{fancy}
+
+\usetikzlibrary{arrows}
+
+\DeclareMathOperator*{\argmin}{argmin}
+\newcommand*{\argminl}{\argmin\limits}
+
+\newcommand{\mathleft}{\@fleqntrue\@mathmargin0pt}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\N}{\mathbb{N}}
+
+\setcounter{MaxMatrixCols}{20}
+
+\begin {document}
+
+\rhead{(Bill) Yuan Liu, student \#: 996954078\\ Date: 2019/11/12}
+\lhead{CSC2321F - Matrix Calculations - Assignment 2}
+
+\begin{enumerate}
+  
+\item $A$ is irreducibly diagonally dominant with positive diagonal entries and nonpositive off-diagonal entries. Show $A^{-1}>0$.\\
+  
+  $A$ is irreducibly diagonally dominant $\implies \rho(I-D^{-1}A)<1$\\
+  $\rho(I-D^{-1}A)<1 \implies (I-(I-D^{-1}A))^{-1} = I+(I-D^{-1}A)+(I-D^{-1}A)^2+...$\\
+
+  $D = diag(A) > 0 \wedge (\forall i) D_{ii} > 0 \implies$  $D^{-1}$ exists and $D^{-1} \geq 0$\\
+  \begin{align*}
+    (I-(I-D^{-1}A))^{-1} &= I+(I-D^{-1}A)+(I-D^{-1}A)^2+...\\
+    (D^{-1}A)^{-1} &= I+(I-D^{-1}A)+(I-D^{-1}A)^2+...\\
+    A^{-1}D &= I+(I-D^{-1}A)+(I-D^{-1}A)^2+...\\
+    A^{-1} &= D^{-1}+D^{-1}(I-D^{-1}A)+D^{-1}(I-D^{-1}A)^2+...\\
+  \end{align*}
+
+  off-diagonal elements of $A$ are nonpositive and $D>0$ $\implies I-D^{-1}A \geq 0$, then:\\
+  $I-D^{-1}A \geq 0$\\
+  $(I-D^{-1}A)(I-D^{-1}A) \geq 0(I-D^{-1}A)$\\
+  $(I-D^{-1}A)^2 \geq 0$\\
+  $...$\\
+  $(I-D^{-1}A)^k \geq 0$ for all $k$\\
+
+  $D^{-1} \geq 0 \wedge (I-D^{-1}A)^k \geq 0 \implies D^{-1}(I-D^{-1}A)^k \geq D^{-1}0$ for all $k$, then:\\
+  $(\forall k) D^{-1}(I-D^{-1}A)^k \geq 0 \implies \sum_{k=0}^{\infty}D^{-1}(I-D^{-1}A)^k \geq 0$\\
+  $D^{-1} \neq 0 \wedge (\forall k) D^{-1}(I-D^{-1}A)^k \geq 0 \implies D^{-1}+\sum_{k=1}^{\infty}D^{-1}(I-D^{-1}A)^k \neq 0$\\
+
+  since $A^{-1}=\sum_{k=0}^{\infty}D^{-1}(I-D^{-1}A)^k$,\\
+  $\sum_{k=0}^{\infty}D^{-1}(I-D^{-1}A)^k \geq 0$,\\
+  $\sum_{k=0}^{\infty}D^{-1}(I-D^{-1}A)^k \neq 0$, then:\\
+  $A^{-1} \geq 0 \wedge A^{-1} \neq 0 \implies A^{-1} > 0$\\
+
+  \pagebreak
+  
+\item Using question 5 of assignment 1\\
+  \begin{enumerate}
+  \item Show -B and A are monotone.\\
+    
+    From assignment A:\\
+    $B=\frac{1}{h^2}tri\{1,-2,1\}$\\
+    $A=\frac{1}{h^4}\begin{bmatrix}
+      5 & -4 & 1 & 0 & ... & 0 & 0 & 0\\
+      -4 & 6 & -4 & 1 & 0 & ... & 0 & 0\\
+      1 & -4 & 6 & -4 & 1 & 0 & ... & 0\\
+      ... & & & & & & &\\
+      & ... & 0 & 1 & -4 & 6 & -4 & 1\\
+      & & ... & 0 & 1 & -4 & 6 & -4\\
+      & & & ... & 0 & 1 & -4 & 5\\
+    \end{bmatrix}$\\
+    $A=B^2$\\
+    $-B=\frac{1}{h^2}tri\{-1,2,-1\}$\\
+    
+    from inspection, $-B$ is irreducibly diagonally dominant and \\
+    $(\forall i)B_{ii}>0 \wedge (\forall i,j: i \neq j)B_{ij} \leq 0$, then using results from problem 1:\\
+    $(-B)^{-1}>0 \implies -B$ is monotone\\
+    
+    $A^{-1}=(BB)^{-1}=((-B)(-B))^{-1}$\\
+    $A^{-1}=(-B)^{-1}(-B)^{-1}$\\
+    $(-B)^{-1} \geq 0$\\
+    $(-B)^{-1}(-B)^{-1} \geq (-B)^{-1}0=0$\\
+    $(-B)^{-1}(-B)^{-1}=A^{-1} \geq 0 \implies A$ is monotone\\
+
+    \pagebreak
+    
+  \item Show $\|B^{-1}\|_{\infty}$ and $\|A^{-1}\|_{\infty}$ are bounded from above independently of n.\\ Give approximate bounds.\\
+    
+    $\|B^{-1}\|_{\infty}=max \frac{\|y\|_{\infty}}{\|By\|_{\infty}}=\frac{1}{ min \frac{\|By\|}{\|y\|}}$\\
+    
+    Using $y=w(x)=x(x-1)/2$\\
+    $By=Bw(x)=\begin{bmatrix}1 \\ .. \\ 1 \end{bmatrix}$\\
+    $By$ distributes components in the output evenly so $y$ is optimal for generating smallest $\|By\|/\|y\|$\\
+    $\|By\|_{\infty}=1$\\
+    $\|y\|_{\infty}=|1/2*(-1/2)/2|=1/8$\\
+    $\|B^{-1}\|_{\infty}= \frac{1}{\frac{1}{1/8}}=1/8$\\
+
+    $\|A^{-1}\|_{\infty} = \|B^{-1}B^{-1}\|_{\infty} \leq \|B^{-1}\|_{\infty} \|B^{-1}\|_{\infty}$\\
+    $\|A^{-1}\|_{\infty} \leq (\frac{1}{8})^2=\frac{1}{64}$\\
+    
+  \item Using bound for $\|A^{-1}\|_{\infty}$ and finite difference approximations to $u_{xxxx}$, prove $max_{i=1}^{n-1} |u_i-\bar{u_i}| = O(h^2)$\\
+
+    given $\|A^{-1}\|_{\infty} \leq (\frac{1}{8})^2=\frac{1}{64}$ and $\|A\|_{\infty}=16\frac{1}{h^4}, \kappa(A)_{\infty} = \frac{1}{4 h^4}=\frac{n^4}{4}$. Assuming a gridding giving a good enough condition number on the machine, we then measure rate of convergence of the solver of assignment 1 for continuously differentiable functions atleast up to 4th order. A convergence rate of approximately $2$ is observed, corresponding to $err_{2n} \approx err_{n} 2^{-2}=err_{n} \frac{1}{4}$ as h halves, then rate of decrease in error is related to h as $O(h^2)$.\\
+
+    \pagebreak
+    
+  \item give diagonalization of $A$.\\ Describe FFT-based (FST) algorithm for solving $A\bar{u}=\bar{g}$.\\
+
+    let $V$ be matrix of eigenvectors of $A$ where eigenvectors coincide with sinusoids of dst\\
+    
+    $V^H = \sqrt{h} \bold{F}$\\
+    $V = \frac{1}{\sqrt{h}} \bold{F}^{-1}$\\
+
+    diagonalization:\\
+    $\Lambda= (\frac{1}{h^2} V^{-1}tridiag\{1,-2,1\} V)^2 = \frac{1}{h^4} V^{-1}(tridiag\{1,-2,1\})^2 V$\\
+
+    $\Lambda$ is a diagonal matrix with eigenvalues as found in assignment 1 ordered correspondingly with eigenvectors in $V$\\
+
+    $A=V \Lambda V^{H}$\\
+    $A^{-1}=V \Lambda^{-1} V^{H}$\\
+    $u=A^{-1}g=V \Lambda^{-1} V^{H} g$\\
+    $u=A^{-1}g= \bold{F}^{-1} \Lambda^{-1} \bold{F} g$\\
+
+    $g^{(1)}= dst(g)$\\
+    solve $\Lambda g^{(2)} = g^{(1)}$ for $g^{(2)}$\\
+    $u=idst(g^{(2)})$\\
+    
+  \end{enumerate}
+
+  \pagebreak
+  
+\item 2D BVP:
+  \begin{align*}
+    u_{xxxx}+2u_{xxyy}+u_{yyyy} &= g\\
+    u&=\gamma\\
+    u_{xx}&=\zeta\\
+    u_{yy}&=\eta\\
+  \end{align*}
+  Find stencil using composition of operators:\\
+  $(u_{xx}+u_{yy})^2=u_{xxxx}+2u_{xxyy}+u_{yyyy}$\\
+  $u_{x}=(\Delta_{o,x}) u_{i,j}h=u_{i+1/2,j}-u_{i-1/2,j}$\\
+  $u_{xx}=(\Delta_{o,x})^2 u_{i,j}h^2=u_{i+1,j}-u_{i,j}-(u_{i,j}-u_{i-1,j})=u_{i+1,j}-2u_{i,j}+u_{i-1,j}$\\
+  $u_{y}=(\Delta_{o,y}) u_{i,j}hx=u_{i,j+1/2}-u_{i,j-1/2}$\\
+  $u_{yy}=(\Delta_{o,y})^2 u_{i,j}h^2=u_{i,j+1}-u_{i,j}-(u_{i,j}-u_{i,j-1})=u_{i,j+1}-2u_{i,j}+u_{i,j-1}$\\
+  
+  $(\Delta_{o,x}^2+\Delta_{o,y}^2)u_{i,j}=\frac{1}{h^2}(u_{i+1,j}-4u_{i,j}+u_{i-1,j}+u_{i,j+1}+u_{i,j-1})=\frac{1}{h^2}\begin{bmatrix} & 1 & \\ 1 & -4 & 1\\ & 1 & \end{bmatrix}$\\
+  \begin{align*}
+    (\Delta_{o,x}^2+\Delta_{o,y}^2)^2 u_{i,j} h^4&=(\Delta_{o,x}^2+\Delta_{o,y}^2)(u_{i+1,j}-4u_{i,j}+u_{i-1,j}+u_{i,j+1}+u_{i,j-1})\\
+                                     &=u_{i-2,j}-4u_{i-1,j}+u_{i,j}+u_{i-1,j-1}+u_{i-1,j+1}\\
+                                     &=-4(u_{i-1,j}-4u_{i,j}+u_{i+1,j}+u_{i,j-1}+u_{i,j+1})\\
+                                     &=u_{i,j}-4u_{i+1,j}+u_{i+2,j}+u_{i+1,j-1}+u_{i+1,j+1}\\
+                                     &=u_{i-1,j-1}-4u_{i,j-1}+u_{i+1,j-1}+u_{i,j-2}+u_{i,j}\\
+                                     &=u_{i-1,j+1}-4u_{i,j+1}+u_{i+1,j+1}+u_{i,j}+u_{i,j+2}\\
+  \end{align*}
+  $(\Delta_{o,x}^2+\Delta_{o,y}^2)^2 u_{i,j}=\frac{1}{h^4}(20u_{i,j}-8u_{i-1,j}-8u_{i+1,j}-8u_{i,j-1}-8u_{i,j+1}+2u_{i+1,j+1}+2u_{i+1,j-1}+2u_{i-1,j-1}+2u_{i-1,j+1}+u_{i-2,j}+u_{i+2,j}+u_{i,j-2}+u_{i,j+2})$\\
+  
+  $(\Delta_{o,x}^2+\Delta_{o,y}^2)^2 u_{i,j}=\frac{1}{h^4}
+  \begin{bmatrix}
+    & & 1 & & \\
+    & 2 & -8 & 2 &\\
+    1 & -8 &20 & -8 & 1\\
+    & 2 & -8 & 2 &\\
+    & & 1 & & \\
+  \end{bmatrix}$\\
+
+  \pagebreak
+  
+  Boundary cases:\\
+
+  $i=1 (x=h)$:\\
+  $(\Delta_{o,x}^2+\Delta_{o,y}^2)^2 u_{i,j} - \frac{1}{h^2}\zeta_{0,j} - \frac{1}{h^4} (-6 \gamma_{0,j}+ 2 \gamma_{0,j-1}+ 2 \gamma_{0,j+1}) = \frac{1}{h^4}
+  \begin{bmatrix}
+    & & 1 & & \\
+    & & -8 & 2 &\\
+    & & 19 & -8 & 1\\
+    & & -8 & 2 &\\
+    & & 1 & & \\
+  \end{bmatrix}$\\
+
+  $i=2 (x=h)$:\\
+  $(\Delta_{o,x}^2+\Delta_{o,y}^2)^2 u_{i,j} - \frac{1}{h^4} \gamma_{0,j} = \frac{1}{h^4}
+  \begin{bmatrix}
+    & & 1 & & \\
+    & 2 & -8 & 2 &\\
+    & -8 & 20 & -8 & 1\\
+    & 2 & -8 & 2 &\\
+    & & 1 & & \\
+  \end{bmatrix}$\\
+
+  Similarly for $i=n-1,n-2$ and $j=i,2,n-1,n-2$\\
+
+  At the corners:\\
+  $i=1,j=1$:\\
+  $(\Delta_{o,x}^2+\Delta_{o,y}^2)^2 u_{i,j} - \frac{1}{h^2}(\zeta_{0,j}+\gamma_{i,0}) - \frac{1}{h^4} (-6 \gamma_{0,1}+ 2 \gamma_{0,0}+ 2 \gamma_{0,2} -6 \gamma_{1,0} + 2 \gamma_{2,0}) = \frac{1}{h^4}
+  \begin{bmatrix}
+    & & 1 & & \\
+    & & -8 & 2 &\\
+    & & 18 & -8 & 1\\
+    & & & &\\
+    & & & & \\
+  \end{bmatrix}$\\
+
+  Compute boundary values for each dimension by following cases for $i=1, 2$ and apply to $i=n-1,n-2$ and $j=1,2,n-1,n-2$ and take care of double counted $\gamma_{0,0}, \gamma_{n,n},\gamma_{0,n},\gamma_{n,0}$ at the corners.\\
+
+  \pagebreak
+  
+  \begin{enumerate}
+  \item Describe the properties (size, bandwidth, nonzero entries per row, sparsity pattern, block structure, etc) of the matrix A arising.\\
+
+
+    number of interior points of the grid = $(n-1)(n-1)$\\
+    size: $(n-1)(n-1) \times (n-1)(n-1)$\\
+    
+    From the 2D stencil of $(\Delta_{o,x}+\Delta_{o,y})^2 u_{i,j}$ having non-zero columns on each side of the center columns, we observe that:\\
+    bandwith: lower half bandwidth = upper half bandwidth = $2n-2$\\
+    sparcity pattern: block pentadiagonal\\
+    
+    pentadiagonal block structure:\\
+    \{a, b, c, b, a\}\\
+    where a is diagonal\\
+    where b is block diagonal with max of 3 non-zero elements and min of 2 non-zero elements per row\\
+    where c is block diagonal with max of 5 non-zero elements and min of 3 non-zero elements per row\\
+    
+    number of nonzero entries per row: max of 5+2(3)+2(1)=13, min of 3+2+1=6\\
+
+    \pagebreak
+    
+  \item Write A in tensor product form, using only tridiagonal matrices and the identity matrix as components. (You can use regular matrix products, as well as tensor products.) Give explicit formulae for the eigenvalues and eigenvectors of A. Find the smallest and largest (algebraically) eigenvalues of A.\\
+
+    using composition of finite difference operators:\\
+    $A=B^2$\\
+    where B is the block tridiagonal matrix arising from $(\Delta_{o,x}^2+\Delta_{o,y}^2) u_{i,j}=\frac{1}{h^2}\begin{bmatrix} & 1 & \\ 1 & -4 & 1\\ & 1 & \end{bmatrix}$ and A corresponds to matrix arising from $(\Delta_{o,x}^2+\Delta_{o,y}^2)^2 u_{i,j}$\\
+    
+    due to ordering of grid points where fastest increasing index is in y axis of grid, there is a stride of $n-1$ between adjacent points differing in x axis, we use tensor products to represent B\\
+    
+    $B = \frac{1}{h^2}(I_{n-1} \otimes tridiag\{1,-2,1\} + tridiag\{1,-2,1\} \otimes I_{n-1})$\\
+    
+    where $tridiag\{1,-2,1\} \otimes I_{n-1}$ corresponds to $(\Delta_{o,x})u_{i,j}$ and $I_{n-1} \otimes tridiag\{1,-2,1\}$ corresponds to $(\Delta_{o,y})u_{i,j}$\\
+
+    since $A=B^2$\\
+    $A=\frac{1}{h^4}(I_{n-1} \otimes tridiag\{1,-2,1\} + tridiag\{1,-2,1\} \otimes I_{n-1})^2$\\
+    $A=\frac{1}{h^4}(I_{n-1} \otimes tridiag\{1,-2,1\}^2 + tridiag\{1,-2,1\}^2 \otimes I_{n-1}+
+    2\ tridiag\{1,-2,1\} \otimes tridiag\{1,-2,1\})$\\
+
+    \pagebreak
+    
+    Finding eigenvalues and eigenvectors of A:\\
+
+    Find eigenvalues and eigenvector of B and eigenvalues of A would be squared of those of B and eigenvectors remain same.\\
+
+    For eigenvalues and eigenvectors of B:\\
+    
+    let $tridiag\{1,-2,1\} v_T=\lambda_{T} u_T$ where $\lambda_T$ and $v_T$ are eigenvalue and eigenvector\\
+
+    eigenvalues/eigenvectors of tridiag\{1,-2,1\}:\\
+    $\lambda_{T_l}=-4sin^2(\frac{l \pi}{2(N+1)}), l=1,..,N$\\
+    $v_{T_{l}} = [.., v_{T_{l,j}}, ..]^T, v_{T_{l,j}}=\sqrt{\frac{2}{N+1}}sin(\frac{jl \pi}{N+1}),l=1,..,N,, j=1,...,N$\\
+
+    $N=n-1$:\\
+    $\lambda_{T_l}=-4sin^2(\frac{l \pi}{2n}), l=1,..,n-1$\\
+    $v_{T_{l,j}}=\sqrt{\frac{2}{n}}sin(\frac{jl \pi}{n}), l=1,..,n-1, j=1,...,n-1$\\
+    
+    Since $B=(I_{n-1} \otimes \frac{1}{h^2}tridiag\{1,-2,1\} + \frac{1}{h^2}tridiag\{1,-2,1\} \otimes I_{n-1})$, and using kronecker product property:\\
+    
+    $(I_{n-1} \otimes \frac{1}{h^2}tridiag\{1,-2,1\} + \frac{1}{h^2}tridiag\{1,-2,1\} \otimes I_{n-1})(u \otimes u)= (\lambda_{T_{1}}+\lambda_{T_{2}})(u \otimes u)$\\
+
+    grid points $n \times m$, $m=n$, $l$ be indexing along x-axis, $j$ be indexing along y-axis\\
+
+    $\lambda_{B_k}, k=1,..,(n-1)(n-1)$\\
+    $\lambda_{B_k} = \frac{1}{h^2}(\lambda_{T_j}^{(m-1)} + \lambda_{T_l}^{(n-1)}), j=1,..,m-1,\ l=1,..,n-1,\ k=(l-1)(m-1)+j$\\
+    same tridiagonal matrix used for 2 axis of grid, so $\lambda_{T_j}^{(m-1)}=\lambda_{T_j}^{(n-1)}=\lambda_{T_j}$\\
+    $\lambda_{B_k} = \frac{1}{h^2}(\lambda_{T_j} + \lambda_{T_l}), j=1,..,n-1,\ l=1,..,n-1,\ k=(l-1)(n-1)+j$\\
+    
+    $\lambda_{B_k} = \frac{1}{h^2}(-4sin^2(\frac{j \pi}{2n}) -4sin^2(\frac{l \pi}{2n})), j=1,..,n-1,\ l=1,..,n-1,\ k=(l-1)(n-1)+j$\\
+
+    $\lambda_{A_k} = (\frac{1}{h^2}\lambda_{B_k})^2$:\\    
+    $\lambda_{A_k} = \frac{1}{h^4}\lambda_{B_k}^2$:\\    
+    $\lambda_{A_k} = \frac{1}{h^4}(-4sin^2(\frac{j \pi}{2n}) -4sin^2(\frac{l \pi}{2n}))^2, j=1,..,n-1,\ l=1,..,n-1,\ k=(l-1)(n-1)+j$\\
+    $\lambda_{A_k} = \frac{1}{h^4}16(sin^4(\frac{j \pi}{2n}) +sin^4(\frac{l \pi}{2n}) +2 sin^2(\frac{j \pi}{2n})sin^2(\frac{l \pi}{2n}) ), j=1,..,n-1,\ l=1,..,n-1,\ k=(l-1)(n-1)+j$\\
+    
+    Eigenvectors of B:\\
+
+    let $v_j^{(n-1)}, j=1,..,n-1$ be normalized eigenvectors of $tridiag\{1,-2,1\}$\\
+    normalized eigenvectors of B: $\delta_k, k=1,..,(n-1)(n-1)$:\\
+    $\delta_k=v_l^{(n-1)} \otimes v_j^{(n-1)}, j=1,...,n-1,\ l=1,...,n-1,\ k=(l-1)(n-1)+j$\\
+
+    since $v_l = [.., v_{l,j}, ..]^T, v_{l,j}=\sqrt{\frac{2}{N+1}}sin(\frac{jl \pi}{N+1}),l=1,..,N,, j=1,...,N$\\
+    
+    $\delta_k= [.., \sqrt{\frac{2}{n}}sin(\frac{lr_1 \pi}{n}), ..]^T \otimes
+    [.., \sqrt{\frac{2}{n}}sin(\frac{j r_2 \pi}{n}), ..]^T, j=1,...,n-1,\ l=1,...,n-1,\ k=(l-1)(n-1)+j$\\
+
+    Eigenvectors of A = Eigenvectors of B = $\{ \delta_k: k=1,..,n\}$\\
+    
+    Find the smallest and largest (algebraically) eigenvalues of A\\
+    
+    $\min_k(\lambda_{A_k}) = \frac{1}{h^4}16(sin^4(\frac{j \pi}{2n}) +sin^4(\frac{l \pi}{2n}) +2 sin^2(\frac{j \pi}{2n})sin^2(\frac{l \pi}{2n}) )|_{j=1,l=1}=\frac{1}{h^4}16(sin^4(\frac{\pi}{2n}) +sin^4(\frac{\pi}{2n}) +2 sin^2(\frac{\pi}{2n})sin^2(\frac{\pi}{2n}))$\\
+    
+    $\max_k(\lambda_{A_k}) = \frac{1}{h^4}16(sin^4(\frac{j \pi}{2n}) +sin^4(\frac{l \pi}{2n}) +2 sin^2(\frac{j \pi}{2n})sin^2(\frac{l \pi}{2n}) )|_{j=n-1,l=n-1} = \frac{1}{h^4}16(sin^4(\frac{\pi}{2}) +sin^4(\frac{\pi}{2}) +2 sin^2(\frac{\pi}{2})sin^2(\frac{\pi}{2}) ) \approx \frac{1}{h^4}16(1 +1 +2)=\frac{64}{h^4}$\\
+
+  \item Prove A is symmetric positive definite\\
+
+    Since $tridiag\{-1,2,-1\}$ is real and symmetric, sum of tensor products with identity matrix is also real and symmetric, so B is real and symmetric. $A=B^2$, then A is real and symmetric. Expression of eigenvalues of A from previous parts is such that terms $sin^4(\frac{j \pi}{2n})$, $sin^2(\frac{j \pi}{2n})$ are not zero, since $j$ is restricted to $1,..,n-1$. terms are also not negative due to even powers, thus all eigenvalues are positive. A is Hermetian and all eigenvalues are positive, then A is symmetric postive definite.\\
+
+    \pagebreak
+    
+    Consider $\alpha u_{xxxx} + \beta u_{xxyy} + \gamma u_{yyyy}$ and let C be the matrix arising from it. Adjust formulae for the eigenvalues of A to obtain respective formulae for the eignevalues of C, in terms of $\alpha$, $\beta$ and $\gamma$. Under what conditions on $\alpha, \beta, \gamma$ is C spd?\\
+
+    $(\alpha_1 u_{xx} + \beta_1 u_{yy})^2 = \alpha_1^2 u_{xxxx} + \beta_1^2 u_{yyyy} + 2 \alpha_1 \beta_1 u_{xxyy} = \alpha u_{xxxx} + \beta u_{xxyy} + \gamma u_{yyyy}$\\
+    $\alpha = \alpha_1^2$\\
+    $\beta = \beta_1^2$\\
+    $\gamma = 2 \alpha_1 \beta_1$\\
+    $\gamma = 2 (\alpha \beta)^{1/2}$\\
+
+    $\lambda_{B_k} = \frac{1}{h^2}(-4 \alpha_1 sin^2(\frac{j \pi}{2n}) -4 \beta_1  sin^2(\frac{l \pi}{2n})), j=1,..,n-1,\ l=1,..,n-1,\ k=(l-1)(n-1)+j$\\
+    
+    $\lambda_{A_k} = (\lambda_{B_k})^2$\\
+    $\lambda_{A_k} = \frac{1}{h^4}16( \alpha_1^2 sin^4(\frac{j \pi}{2n}) + \beta_1^2 sin^4(\frac{l \pi}{2n}) +2 \alpha_1 \beta_1 sin^2(\frac{j \pi}{2n})sin^2(\frac{l \pi}{2n}) ), j=1,..,n-1,\ l=1,..,n-1,\ k=(l-1)(n-1)+j$\\
+    $\lambda_{A_k} = \frac{1}{h^4}16( \alpha sin^4(\frac{j \pi}{2n}) + \beta sin^4(\frac{l \pi}{2n}) + \gamma  sin^2(\frac{j \pi}{2n})sin^2(\frac{l \pi}{2n}) ), j=1,..,n-1,\ l=1,..,n-1,\ k=(l-1)(n-1)+j$\\
+
+    condition for spd:\\
+    $\alpha sin^4(\frac{j \pi}{2n}) + \beta sin^4(\frac{l \pi}{2n}) + \gamma  sin^2(\frac{j \pi}{2n})sin^2(\frac{l \pi}{2n})>0,  j=1,..,n-1,\ l=1,..,n-1,\ k=(l-1)(n-1)+j, \gamma = 2 (\alpha \beta)^{1/2}$\\
+    \pagebreak
+    
+  \item given approximate bound for Euclidean norm $\|A^{-1}\|_2$\\
+    $\|A^{-1}\|_2=\max_{\|x\|_2 \neq 0} \frac{\|A^{-1}x\|_2}{\|x\|_2}$\\
+    $y=A^{-1}x, x \neq 0, A\ invertible \implies y \neq 0$\\
+    $\|A^{-1}\|_2=max_{y \neq 0} \frac{\|y\|_2}{\|Ay\|_2} \Longleftrightarrow 1/(min\frac{\|Ay\|_2}{\|y\|_2}) $\\
+
+    
+    from previous parts and $sin(x) \approx x$ for small $x$, \\
+    $\min_k(\lambda_{A_k}) =\frac{1}{h^4}16(sin^4(\frac{\pi}{2n}) +sin^4(\frac{\pi}{2n}) +2 sin^2(\frac{\pi}{2n})sin^2(\frac{\pi}{2n})) \approx \frac{1}{h^4}16(\frac{\pi^4}{4n^4})=4 \pi^4$\\
+    so $\|A^{-1}\|_2$ is bounded by $\frac{1}{4 \pi^4}$\\
+    
+  \item give the block diagonalization of A. Describe an FFT-vased (FST) algorithm for solving Au=g, that applied FST to one dimension and banded LU to the other.\\
+
+    using results from previous parts,\\
+    
+    $A=\frac{1}{h^4}(I_{n-1} \otimes tridiag\{1,-2,1\}^2 + tridiag\{1,-2,1\}^2 \otimes I_{n-1}+
+    2\ tridiag\{1,-2,1\} \otimes tridiag\{1,-2,1\})$\\
+
+    let $T=tridiag\{1,-2,1\}$\\
+
+    let $V$ be a matrix of eigenvectors of $tridiag\{1,-2,1\}$\\
+    let $V^{-1}TV=D_T$ be diagonalization of $tridiag\{1,-2,1\}$\\
+    $D_T=diag(-4 sin^2(\frac{l \pi}{2n})), l = 1,..,n-1$\\
+    let $(V^{-1}TV)^2=V^{-1}T^2 V=D_T^2=D_B$ be diagonalization of matrix $(tridiag\{1,-2,1\})^2$\\
+    \begin{align*}
+      Block=&(V^{-1} \otimes I^{-1})A(V \otimes I)\\
+      Block=&(V^{-1} \otimes I^{-1})(\frac{1}{h^4}(I_{n-1} \otimes T^2 + T^2 \otimes I_{n-1}+2\ T \otimes T))(V \otimes I)\\    
+      Block=&\frac{1}{h^4}((V^{-1} \otimes I^{-1})(I \otimes T^2)(V \otimes I)\\
+      &+(V^{-1} \otimes I^{-1})(T^2 \otimes I)(V \otimes I)\\
+      &+(V^{-1} \otimes I^{-1})(2\ T \otimes T)(V \otimes I))\\
+      Block=&\frac{1}{h^4}((V^{-1}IV)\otimes(I^{-1}T^2I)\\
+        &+(V^{-1}T^2V)\otimes(I^{-1}II)\\
+        &+2(V^{-1}TV)\otimes(I^{-1}TI))\\
+      Block=&\frac{1}{h^4}(I\otimes T^2 + D_B \otimes I +2(D_T \otimes T ))\\
+    \end{align*}
+
+    \pagebreak
+
+    FFT based procedure to solve u:\\
+
+    $A=(V \otimes I)Block(V^{-1} \otimes I^{-1})$\\
+    $A^{-1}=(V \otimes I)Block^{-1}(V^{-1} \otimes I^{-1})$\\
+    $\bar{u}=A^{-1}\bar{g}=(V \otimes I)Block^{-1}(V^{-1} \otimes I)\bar{g}$\\
+    $\bar{u}=(\bold{F}^{-1} \otimes I)Block^{-1}(\bold{F} \otimes I)\bar{g}$\\
+
+    DST of size $n-1$ to each column of $\bar{g}_{m-1 \times n-1}^T$:\\
+    $\bar{g}_{m-1 \times x-1}=reshape(\bar{g},[m-1,n-1])$\\
+    $\bar{g}_{m-1 \times n-1}^{(1)}= (dst(\bar{g}_{m-1 \times x-1}^T))^T$\\
+    $stack(\bar{g}_{m-1,n-1}^{(1)}) = (\bold{F} \otimes I) \bar{g}$\\
+    
+    solve $B \bar{g}^{(2)} = stack(\bar{g}_{m-1,n-1}^{(1)})$ for $\bar{g}^{(2)}$ via block solver:\\
+    $\bar{g}^{(2)}=B \backslash stack(\bar{g}_{m-1,n-1}^{(1)})$\\
+    
+    inverse DST of size $n-1$ to each column of $(\bar{g}_{m-1,n-1}^{(2)})^T$:\\
+    $\bar{g}_{m-1.n-1}^{(2)}=reshape(\bar{g}^{(2)},[m-1,n-1])$\\
+    $u_{m-1,n-1}=(idst((\bar{g}_{m-1,n-1}^{(2)})^T))^T$\\
+    $\bar{u}=stack(u_{m-1,n-1})=(\bold{F}^{-1} \otimes I^{-1}) \bar{g}^{(2)}$\\
+
+
+    \pagebreak
+    
+  \end{enumerate}
+
+  \pagebreak
+
+\item Write a programme applying FST in 1 dimension and banded LU in the other dimension and compute for $u(x,y)=sin(x)sin(y)$ and $u(x,y)=x^{7/2}y^{7/2}$\\
+  
+    $u(x,y)=sin(x)sin(y)$:\\
+    \begin{tabular}{ |c |c |}
+      \hline
+      n & max absolute knot error\\
+      \hline
+      8 & 5.3042e-5\\
+      \hline
+      16 & 1.3363e-5\\
+      \hline
+      32 & 3.3683e-6\\
+      \hline
+      64 & 8.4237e-7\\
+      \hline
+    \end{tabular}
+
+    \begin{tabular}{ |c |c |}
+      \hline
+      $n_1,n_2$ & rate of convergence\\
+      \hline
+      8,16 & 1.9889\\
+      \hline
+      16,32 & 1.9881\\
+      \hline
+      32,64 & 1.9995\\
+      \hline
+    \end{tabular}\\
+    \\
+    
+    $u(x,y)=x^{7/2}y^{7/2}$:\\
+    \begin{tabular}{ |c |c |}
+      \hline
+      n & sum abs knot error\\
+      \hline
+      8 & 8.1264e-4\\
+      \hline
+      16 & 2.4227e-4 \\
+      \hline
+      32 & 7.3949e-5\\
+      \hline
+      64 & 2.3186e-5\\
+      \hline
+    \end{tabular}
+
+    \begin{tabular}{ |c |c |}
+      \hline
+      $n_1,n_2$ & rate of convergence\\
+      \hline
+      8,16 & 1.7460\\
+      \hline
+      16,32 & 1.7120\\
+      \hline
+      32,64 & 1.6733\\
+      \hline
+    \end{tabular}\\
+    \\
+    
+    How does error behave with n?\\
+    
+    From observation, as n doubles and grid points quadruples, accuracy improves by about a factor of 4 for $sin(x)sin(y)$ and slightly less for $x^{7/2}y^{7/2}$.\\
+    
+    $u(x,y)=sin(x)sin(y)$ is infinitely differentiable and smooth and is it expected to incur truncation error.\\
+
+    Mixed derivatives of $u(x,y)=x^{7/2}y^{7/2}$ does not vanish and does incur truncation error and it is expected that accuracy improvement as h decreases is hindered by the uneven distribution of steep slope of higher order derivatives near the boundary.\\
+
+  \item Show DFT matrix is unitary
+    \begin{flalign*}
+      F_{k,j} &= e^{\frac{-2 \pi i kj}{n}}, k=0,..,n-1,j=0,..,n-1, i=\sqrt{-1}\\
+      F\overline{F^H} &=\sum_{l=0}^{n-1} F_{k,l}\overline{F_{l,j}}, k,j=0,..,n-1\\
+      k=j:&\\
+      F_{k,k} \overline{F^H_{k,k}}= & \sum_{l=0}^{n-1} F_{k,l}\overline{F_{l,k}}, k=0,..,n-1\\
+      = & \sum_{l=0}^{n-1}  e^{\frac{-2 \pi i kl}{n}} e^{\frac{2 \pi i lk}{n}}, k=0,..,n-1\\
+      = & \sum_{l=0}^{n-1}  e^{\frac{-2 \pi i kl}{n} + \frac{2 \pi i lk}{n}}, k=0,..,n-1\\
+      = & \sum_{l=0}^{n-1}  e^{0} = n, k=0,..,n-1\\
+      k \neq j:&\\
+      F_{k,j} \overline{F^H_{k,j}} = & \sum_{l=0}^{n-1} F_{k,l}\overline{F_{l,j}}, k,j=0,..,n-1,k \neq j\\
+      = & \sum_{l=0}^{n-1} e^{\frac{-2 \pi i kl}{n}} e^{\frac{2 \pi i lj}{n}}, k,j=0,..,n-1,k \neq j\\
+      = & \sum_{l=0}^{n-1} e^{\frac{-2 \pi i l(k-j)}{n}}, k,j=0,..,n-1,k \neq j\\
+      e^{\frac{k-j}{n}} & \neq 0 \\
+      F_{k,j} \overline{F^H_{k,j}} = & e^{\frac{k-j}{n}} \sum_{l=0}^{n-1} e^{-2 \pi i l}, k,j=0,..,n-1,k \neq j\\
+      = & e^{\frac{k-j}{n}} \frac{1-e^{-2 \pi i n}}{1-e^{-2 \pi i}}, k,j=0,..,n-1,k \neq j\\
+      e^{-2 \pi i n} & = 1\\
+      F_{k,j} \overline{F^H_{k,j}} = & e^{\frac{k-j}{n}} \frac{1-1}{1-e^{-2 \pi i}}=0, k,j=0,..,n-1,k \neq j\\
+      F\overline{F^H} & = diag(n)\\
+      \frac{1}{\sqrt{n}}F \frac{1}{\sqrt{n}} \overline{F^H} & = diag(1)\\
+      (\frac{1}{\sqrt{n}}F)^H & = \frac{1}{\sqrt{n}} \overline{F^H}\\
+      & \frac{1}{\sqrt{n}}F \text{ is unitary}\\
+    \end{flalign*}
+
+  \item 
+    \begin{enumerate}
+    \item Show circulant matrix C with $a_1=1, a_j=0$ for $j=0,2,...,n-1$ is diagonalizable by inverse of matrix $F_n$\\      
+      $\Lambda = FCF^H$\\
+      $C=\begin{bmatrix}
+        0 & 1 & 0 & 0 &... & 0\\
+        0 & 0 & 1 & 0 &... & 0\\
+        0 & 0 & 0 & 1 &... & 0\\
+        ... & & & & & & \\
+        & & 0 & 0 & 0 &... & 1\\
+        1 & 0 & 0 & 0 &... & 0\\
+      \end{bmatrix}$\\
+      let $w=e^{\frac{2 \pi i}{n}}$\\
+      C is a permutation matrix\\
+      $CF^H$ circularly shifts rows of $F^H$\\
+      $CF^H = \begin{bmatrix}
+        w^{-(1)(0)} & w^{-(1)(1)} & w^{-(1)(2)} & ... & w^{-(1)(n-1)} \\
+        w^{-(2)(0)} & w^{-(2)(1)} & w^{-(2)(2)} & ... & w^{-(2)(n-1)} \\
+        ... & & & & \\
+        w^{-(n-1)(0)} & w^{-(n-1)(1)} & w^{-(n-1)(2)} & ... & w^{-(n-1)(n-1)} \\
+        w^{-(0)(0)} & w^{-(0)(1)} & w^{-(0)(2)} & ... & w^{-(0)(n-1)} \\
+      \end{bmatrix}$\\
+
+      $F = \begin{bmatrix}
+        w^{(0)(0)} & w^{(0)(1)} & w^{(0)(2)} & ... & w^{(0)(n-1)} \\
+        w^{(1)(0)} & w^{(1)(1)} & w^{(1)(2)} & ... & w^{(1)(n-1)} \\
+        ... & & & & \\
+        w^{(n-1)(0)} & w^{(n-1)(1)} & w^{(n-1)(2)} & ... & w^{(n-1)(n-1)}
+      \end{bmatrix}$\\
+      Diagonal entries:\\
+      $(FCF^H)_{j,j}=
+      \begin{bmatrix} w^{(j)(0)} & w^{(j)(1) & ... & w^{(j)(n-1)} } \end{bmatrix}
+      \begin{bmatrix}
+        w^{-(1)(j)} \\
+        w^{-(2)(j)} \\
+        ... \\
+        w^{-(n-1)(j)} \\
+        w^{-(0)(j)}
+      \end{bmatrix}$\\
+      $(FCF^H)_{j,j}=
+      w^{(j)(0)-(1)(j)} +
+      w^{(j)(1)-(2)(j)} +
+      ... +
+      w^{(j)(n-2)-(n-1)(j)} +
+      w^{(j)(n-1)-(0)(j)}$\\
+      $(FCF^H)_{j,j} = n w^{-j}, j = 0, ..., n-1$\\
+      Off-Diagonal entries:\\
+      $(FCF^H)_{k,j}=
+      \begin{bmatrix} w^{(k)(0)} & w^{(k)(1) & ... & w^{(k)(n-1)} } \end{bmatrix}
+      \begin{bmatrix}
+        w^{-(1)(j)} \\
+        w^{-(2)(j)} \\
+        ... \\
+        w^{-(n-1)(j)} \\
+        w^{-(0)(j)}
+      \end{bmatrix}$\\
+      $(FCF^H)_{k,j} =
+      w^{(k)(0)+(-1)(j)} +
+      w^{(k)(1)+(-2)(j)} +
+      ... +
+      w^{(k)(n-2)+(-(n-1))(j)} +
+      w^{(k)(n-1)+(-(0))(j)}
+      $\\
+      $(FCF^H)_{k,j} =
+      w^{-j}(
+      w^{(k)(0)-(j)(0)} +
+      w^{(k)(1)-(j)(1)} +
+      ... +
+      w^{(k)(n-1)-(j)(n-1)})
+      $\\
+      let $m=k-j$\\
+      $(FCF^H)_{k,j} = w^{-j}(\sum_{l=0}^{n-1} w^{ml})$\\
+      $\sum_{l=0}^{n-1} w^{ml}=0$\\
+      $(FCF^H)_{k,j} = w^{-j}(0))=0, j \neq k$\\
+      $FCF^H = diag(n, n w^{-1}, n w^{-2}, ..., n w^{-(n-1)})$\\
+      eigenvalues of $C$: $\{ n, n w^{-1}, ... , n w^{-(n-1)} \}$\\
+      
+      \pagebreak
+    \item Show any circulant matrix is diagonalizable by inverse of matrix $F_n$\\
+
+      Let $s$ be a shift factor.\\
+      Circulant matrix with $a_s, s=0,...,n-1$ performs circular shifted copy of rows of $F^H$ with shift $s$ and gives a constant factor $a_s$ associated with each shifted copy. This is reflected in contribution to the final eigenvalues.\\
+
+      Per shift factor $a_s$:\\
+      Diagonal entries:\\
+      $(FCF^H)_{j,j}=
+      a_s 
+      \begin{bmatrix} w^{(j)(0)} & w^{(j)(1) & ... & w^{(j)(n-1)} } \end{bmatrix}
+      \begin{bmatrix}
+        w^{-(s)(j)} \\
+        w^{-(s+1)(j)} \\
+        ... \\
+        w^{-(n-1)(j)} \\
+        w^{-(0)(j)}\\
+        w^{-(1)(j)}\\
+        ...
+        w^{-(s-1)(j)}\\
+      \end{bmatrix}$\\
+      $(FCF^H)_{j,j}=
+      a_s(
+      w^{(j)(0)-(s)(j)} +
+      w^{(j)(1)-(s+1)(j)} +
+      ... +
+      w^{(j)(n-s)-(0)(j)} +
+      ... +
+      w^{(j)(n-2)-(s-2)(j)} +
+      w^{(j)(n-1)-(s-1)(j)}
+      )$\\
+      $(FCF^H)_{j,j} = a_s n w^{-sj}, j =0,..,n-1$\\
+
+      Off-Diagonal entries:\\
+      $(FCF^H)_{k,j}=
+      a_s
+      \begin{bmatrix}w^{(k)(0)} & w^{(k)(1) & ... & w^{(k)(n-1)} } \end{bmatrix}
+      \begin{bmatrix}
+        w^{-(s)(j)} \\
+        w^{-(s+1)(j)} \\
+        ... \\
+        w^{-(s-1)(j)}
+      \end{bmatrix}$\\
+      $(FCF^H)_{k,j} =
+      a_s
+      w^{-sj}(
+      w^{(k-j)(0)} +
+      w^{(k-j)(1)} +
+      ... +
+      w^{(k-j)(n-1)})
+      $\\
+      let $m=k-j$\\
+      $(FCF^H)_{k,j} = a_s w^{-sj}(\sum_{l=0}^{n-1} w^{ml})$\\
+      $\sum_{l=0}^{n-1} w^{ml}=0$\\
+      $(FCF^H)_{k,j} = a_s w^{-sj}(0))=0, j \neq k$\\
+      $FCF^H = diag(a_s n, a_s n w^{-s}, a_s n w^{-2s}, ..., a_s n w^{-(n-1)s})$\\
+
+      Since every circulant matrix with shift factor induces diagonalization, and matrix multiplication is linear, the combined result for all shift factors is:\\
+      
+      $FCF^H = \sum_{s=0}^{n-1} (diag(a_s n, a_s n w^{-s}, a_s n w^{-2s}, ..., a_s n w^{-(n-1)s}))$\\
+      The eigenvalues are $\{ \sum_{s=0}^{n-1} a_s n w^{-sj}: j=0,..,n-1\}$
+      
+    \end{enumerate}
+
+    
+\end{enumerate}
+
+\end {document}
